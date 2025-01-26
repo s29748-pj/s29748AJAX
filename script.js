@@ -74,6 +74,9 @@ async function drawAlbum(id) {
 
         const bigPhotoContainerPhoto = document.createElement("img");
         bigPhotoContainerPhoto.setAttribute("src", "");
+        bigPhotoContainerPhoto.onerror = () => {
+            bigPhotoContainerPhoto.setAttribute("src", "https://via.placeholder.com/600");
+        };
         bigPhotoContainer.appendChild(bigPhotoContainerPhoto);
 
         const bigPhotoContainerButton = document.createElement("button");
@@ -97,6 +100,9 @@ async function drawAlbum(id) {
             const photo = document.createElement("img");
             photo.classList.add("photo");
             photo.setAttribute("src", url);
+            photo.onerror = () => {
+                photo.setAttribute("src", "https://via.placeholder.com/600");
+            };
             photoContainer.appendChild(photo);
 
             const titleEl = document.createElement("div");
