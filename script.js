@@ -40,19 +40,30 @@ function loadPhotos(albumId, title) {
         .then(photos => {
             photos.forEach(photo => {
                 const img = document.createElement("img");
-                img.src = photo.thumbnailUrl.startsWith("http") 
-                    ? photo.thumbnailUrl 
-                    : "https://via.placeholder.com/150";
 
+                // Using Lorem Picsum for valid placeholder images
+                const validUrl = photo.thumbnailUrl.startsWith("http") 
+                    ? photo.thumbnailUrl 
+                    : `https://picsum.photos/150?random=${photo.id}`;
+
+                img.src = validUrl;
                 img.alt = photo.title;
                 img.classList.add("photo-thumbnail");
 
-                img.onclick = () => openLightbox(photo.url);
+                img.onclick = () => openLightbox(photo.url.startsWith("http") 
+                    ? photo.url 
+                    : `https://picsum.photos/600?random=${photo.id}`);
+
+                img.onerror = () => {
+                    img.src = "https://picsum.photos/150?random=fallback";
+                };
+
                 photoSection.appendChild(img);
             });
         })
         .catch(error => {
             console.error("Error fetching photos:", error);
+            photoSection.innerHTML = `<p style="color: red;">Failed to load photos. Please try again later.</p>`;
         });
 }
 
@@ -60,11 +71,11 @@ function openLightbox(url) {
     lightbox.style.display = "flex";
     lightboxImg.src = url.startsWith("http") 
         ? url 
-        : "https://via.placeholder.com/600";
-
+        : `https://picsum.photos/600?random=fallback`;
     lightboxImg.alt = "Expanded photo";
 }
 
+// Close lightbox when clicking the close button
 document.querySelector(".close").onclick = () => {
     lightbox.style.display = "none";
 };
