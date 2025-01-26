@@ -38,12 +38,9 @@ async function drawAlbums() {
             const albumContainer = document.createElement("div");
             albumContainer.classList.add("album-container");
             albumContainer.innerText = title;
-
-            albumContainer.setAttribute("data-id", id);
             albumContainer.addEventListener("click", () => {
                 drawPage(() => drawAlbum(id));
             });
-
             container.appendChild(albumContainer);
         });
     } catch (error) {
@@ -86,23 +83,27 @@ async function drawAlbum(id) {
 
         const album = await getAlbum(id);
 
-        document.querySelectorAll(".photo-container").forEach(photoContainer => {
-            const photoId = photoContainer.getAttribute("data-id");
-            const photoData = album.find(photo => photo.id == photoId);
-            if (photoData) {
-                const photo = document.createElement("img");
-                photo.classList.add("photo");
-                photo.setAttribute("src", photoData.url);
-                photo.onerror = () => {
-                    photo.src = "https://via.placeholder.com/600";
-                };
-                photoContainer.appendChild(photo);
+        album.forEach(({ title, url }) => {
+            const photoContainer = document.createElement("div");
+            photoContainer.classList.add("photo-container");
+            container.appendChild(photoContainer);
+            photoContainer.addEventListener("click", () => {
+                bigPhotoContainer.classList.remove("big-photo-container--hidden");
+                bigPhotoContainerPhoto.src = url;
+            });
 
-                const titleEl = document.createElement("div");
-                titleEl.classList.add("title");
-                titleEl.innerText = photoData.title;
-                photoContainer.appendChild(titleEl);
-            }
+            const photo = document.createElement("img");
+            photo.classList.add("photo");
+            photo.setAttribute("src", url);
+            photo.onerror = () => {
+                photo.src = "https://via.placeholder.com/600";
+            };
+            photoContainer.appendChild(photo);
+
+            const titleEl = document.createElement("div");
+            titleEl.classList.add("title");
+            titleEl.innerText = title;
+            photoContainer.appendChild(titleEl);
         });
     } catch (error) {
         console.error("Error fetching album:", error);
