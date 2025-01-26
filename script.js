@@ -1,28 +1,24 @@
 const rootEl = document.getElementById("root");
 
-function sendRequest(url, method) {
-    console.log(url);
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url,
-            type: method,
-            dataType: "json",  // Fixed typo here
-            success: function (data) {
-                resolve(data);
-            },
-            error: function (_, error) {
-                reject(error);
-            },
-        });
-    });
+async function fetchData(url) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+    }
 }
 
 function getAlbums() {
-    return sendRequest("https://jsonplaceholder.typicode.com/albums", "GET");
+    return fetchData("https://jsonplaceholder.typicode.com/albums");
 }
 
 function getAlbum(id) {
-    return sendRequest(`https://jsonplaceholder.typicode.com/photos?albumId=${id}`, "GET");
+    return fetchData(`https://jsonplaceholder.typicode.com/photos?albumId=${id}`);
 }
 
 function drawPage(drawingFunction) {
@@ -44,7 +40,7 @@ async function drawAlbums() {
             albumContainer.innerText = title;
 
             albumContainer.addEventListener("click", () => {
-                drawPage(drawAlbum.bind(null, id));
+                drawPage(() => drawAlbum(id));
             });
 
             container.appendChild(albumContainer);
