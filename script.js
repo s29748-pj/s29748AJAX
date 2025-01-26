@@ -6,7 +6,7 @@ function sendRequest(url, method) {
 		$.ajax({
 			url,
 			type: method,
-			dataTyoe: "json",
+			dataType: "json",
 			success: function (data) {
 				resolve(data);
 			},
