@@ -3,6 +3,13 @@ const photoContainer = document.getElementById("photo-container");
 const photoSection = document.getElementById("photos");
 const lightbox = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightbox-img");
+const backButton = document.createElement("button");
+
+// Add "Back to Main Menu" Button
+backButton.id = "back-button";
+backButton.textContent = "Back to Main Menu";
+backButton.onclick = goBack;
+document.body.insertBefore(backButton, photoContainer);
 
 // Simulated albums list
 const albums = [
@@ -24,6 +31,8 @@ albums.forEach(album => {
 
 function loadPhotos(albumId, title) {
     photoContainer.style.display = "block";
+    backButton.style.display = "block";
+    galleryList.style.display = "none";
     document.getElementById("album-title").textContent = title;
     photoSection.innerHTML = "";
 
@@ -66,3 +75,9 @@ lightbox.addEventListener("click", (event) => {
         lightbox.style.display = "none";
     }
 });
+
+function goBack() {
+    photoContainer.style.display = "none";
+    galleryList.style.display = "flex";
+    backButton.style.display = "none";
+}
