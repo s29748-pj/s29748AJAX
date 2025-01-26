@@ -73,10 +73,7 @@ async function drawAlbum(id) {
         rootEl.appendChild(bigPhotoContainer);
 
         const bigPhotoContainerPhoto = document.createElement("img");
-        bigPhotoContainerPhoto.setAttribute("src", "");
-        bigPhotoContainerPhoto.onerror = () => {
-            bigPhotoContainerPhoto.setAttribute("src", "https://via.placeholder.com/600");
-        };
+        bigPhotoContainerPhoto.src = "https://via.placeholder.com/600";
         bigPhotoContainer.appendChild(bigPhotoContainerPhoto);
 
         const bigPhotoContainerButton = document.createElement("button");
@@ -94,14 +91,15 @@ async function drawAlbum(id) {
             container.appendChild(photoContainer);
             photoContainer.addEventListener("click", () => {
                 bigPhotoContainer.classList.remove("big-photo-container--hidden");
-                bigPhotoContainerPhoto.setAttribute("src", url);
+                bigPhotoContainerPhoto.src = url;
             });
 
             const photo = document.createElement("img");
             photo.classList.add("photo");
-            photo.setAttribute("src", url);
+            photo.src = url;
             photo.onerror = () => {
-                photo.setAttribute("src", "https://via.placeholder.com/600");
+                photo.onerror = null; // Prevent looping
+                photo.src = "https://via.placeholder.com/600";
             };
             photoContainer.appendChild(photo);
 
