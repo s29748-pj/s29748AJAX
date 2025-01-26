@@ -5,13 +5,31 @@ const lightbox = document.getElementById("lightbox");
 const lightboxImg = document.getElementById("lightbox-img");
 const backButton = document.createElement("button");
 
-// Add "Back to Main Menu" Button
+let currentImageIndex = 0;
+let currentAlbumImages = [];
+
+
 backButton.id = "back-button";
 backButton.textContent = "Back to Main Menu";
 backButton.onclick = goBack;
 document.body.insertBefore(backButton, photoContainer);
 
-// Simulated albums list
+
+const prevBtn = document.createElement("button");
+prevBtn.id = "prev-btn";
+prevBtn.classList.add("lightbox-btn");
+prevBtn.textContent = "❮";
+prevBtn.onclick = () => changeImage(-1);
+lightbox.appendChild(prevBtn);
+
+const nextBtn = document.createElement("button");
+nextBtn.id = "next-btn";
+nextBtn.classList.add("lightbox-btn");
+nextBtn.textContent = "❯";
+nextBtn.onclick = () => changeImage(1);
+lightbox.appendChild(nextBtn);
+
+
 const albums = [
     { id: 1, title: "Nature Photography" },
     { id: 2, title: "City Landscapes" },
@@ -20,7 +38,7 @@ const albums = [
     { id: 5, title: "Abstract Art" }
 ];
 
-// Populate album list
+
 albums.forEach(album => {
     const albumDiv = document.createElement("div");
     albumDiv.textContent = album.title;
@@ -35,12 +53,13 @@ function loadPhotos(albumId, title) {
     galleryList.style.display = "none";
     document.getElementById("album-title").textContent = title;
     photoSection.innerHTML = "";
+    currentAlbumImages = [];
 
-    // Simulate 10 random photos per album using Lorem Picsum
+
     for (let i = 1; i <= 10; i++) {
         const img = document.createElement("img");
         
-        // Generating random images from Lorem Picsum
+    
         const imageUrl = `https://picsum.photos/150/150?random=${albumId}${i}`;
         const fullImageUrl = `https://picsum.photos/600/400?random=${albumId}${i}`;
 
@@ -48,28 +67,43 @@ function loadPhotos(albumId, title) {
         img.alt = `Photo ${i} from ${title}`;
         img.classList.add("photo-thumbnail");
 
-        img.onclick = () => openLightbox(fullImageUrl);
+        img.onclick = () => openLightbox(i - 1);  
 
         img.onerror = () => {
             img.src = "https://picsum.photos/150/150?random=fallback";
         };
 
         photoSection.appendChild(img);
+        currentAlbumImages.push(fullImageUrl);
     }
 }
 
-function openLightbox(url) {
+function openLightbox(index) {
+    currentImageIndex = index;
     lightbox.style.display = "flex";
-    lightboxImg.src = url;
-    lightboxImg.alt = "Expanded photo";
+    lightboxImg.src = currentAlbumImages[currentImageIndex];
+    lightboxImg.alt = `Image ${currentImageIndex + 1}`;
 }
 
-// Close lightbox when clicking the close button
+function changeImage(step) {
+    currentImageIndex += step;
+
+    if (currentImageIndex < 0) {
+        currentImageIndex = currentAlbumImages.length - 1;
+    } else if (currentImageIndex >= currentAlbumImages.length) {
+        currentImageIndex = 0;
+    }
+
+    lightboxImg.src = currentAlbumImages[currentImageIndex];
+    lightboxImg.alt = `Image ${currentImageIndex + 1}`;
+}
+
+
 document.querySelector(".close").onclick = () => {
     lightbox.style.display = "none";
 };
 
-// Close lightbox when clicking outside the image
+
 lightbox.addEventListener("click", (event) => {
     if (event.target === lightbox) {
         lightbox.style.display = "none";
