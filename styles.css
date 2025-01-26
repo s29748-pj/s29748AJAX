@@ -28,7 +28,18 @@ body {
     justify-content: center;
     align-items: center;
 }
+.photo-thumbnail {
+    width: 150px;
+    height: auto;
+    margin: 5px;
+    cursor: pointer;
+    border: 2px solid #ddd;
+    transition: transform 0.3s ease-in-out;
+}
 
+.photo-thumbnail:hover {
+    transform: scale(1.1);
+}
 .lightbox img {
     max-width: 80%;
     max-height: 80%;
