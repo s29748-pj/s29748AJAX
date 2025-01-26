@@ -40,11 +40,14 @@ function loadPhotos(albumId, title) {
         .then(photos => {
             photos.forEach(photo => {
                 const img = document.createElement("img");
-                img.src = photo.thumbnailUrl; // Using API-provided thumbnail URL
+                img.src = photo.thumbnailUrl.startsWith("http") 
+                    ? photo.thumbnailUrl 
+                    : "https://via.placeholder.com/150";
+
                 img.alt = photo.title;
                 img.classList.add("photo-thumbnail");
 
-                img.onclick = () => openLightbox(photo.url); // Using correct URL from API
+                img.onclick = () => openLightbox(photo.url);
                 photoSection.appendChild(img);
             });
         })
@@ -55,7 +58,10 @@ function loadPhotos(albumId, title) {
 
 function openLightbox(url) {
     lightbox.style.display = "flex";
-    lightboxImg.src = url;
+    lightboxImg.src = url.startsWith("http") 
+        ? url 
+        : "https://via.placeholder.com/600";
+
     lightboxImg.alt = "Expanded photo";
 }
 
